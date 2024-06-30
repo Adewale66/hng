@@ -27,7 +27,6 @@ public class TaskOne {
     public Object taskone(@RequestParam("visitor_name") String visitorName) throws IOException {
          final String API_KEY_LOCATION = System.getenv("LOCATION");
        final String API_KEY_WEATHER = System.getenv("WEATHER");
-//        final String API_KEY_WEATHER = "7efb1a610595ed90937c4564fc13ab32";
         String ip = request.getRemoteAddr();
         final String LOCATION_URI = String.format("https://geo.ipify.org/api/v2/country,city?apiKey=%s&ipAddress=%s", API_KEY_LOCATION, ip);
         Map<String, Object> locationJson = objectMapper.readValue(new URL(LOCATION_URI), new TypeReference<>() {
