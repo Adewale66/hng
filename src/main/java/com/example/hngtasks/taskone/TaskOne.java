@@ -25,17 +25,14 @@ public class TaskOne {
 
     @GetMapping("/api/hello")
     public Object taskone(@RequestParam("visitor_name") String visitorName) throws IOException {
-         final String API_KEY_LOCATION = System.getenv("LOCATION");
        final String API_KEY_WEATHER = System.getenv("WEATHER");
         String ip = request.getRemoteAddr();
-        final String LOCATION_URI = String.format("https://geo.ipify.org/api/v2/country,city?apiKey=%s&ipAddress=%s", API_KEY_LOCATION, ip);
+        final String LOCATION_URI = String.format("http://ip-api.com/json/%s?fields=city,lat,lon", ip);
         Map<String, Object> locationJson = objectMapper.readValue(new URL(LOCATION_URI), new TypeReference<>() {
         });
-        int length = locationJson.get("location").toString().length();
-        String[] locationKeys = locationJson.get("location").toString().substring(1, length - 1).split(",");
-        String region = locationKeys[1].split("=")[1];
-        String lat = locationKeys[3].split("=")[1];
-        String lng = locationKeys[4].split("=")[1];
+        String region = locationJson.get("city").toString();
+        String lat = locationJson.get("lat").toString();
+        String lng = locationJson.get("lon").toString();
         final String WEATHER_URI = String.format("https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s", lat, lng, API_KEY_WEATHER);
         Map<String, Object> weatherJson = objectMapper.readValue(new URL(WEATHER_URI), new TypeReference<>() {
         });
@@ -46,7 +43,7 @@ public class TaskOne {
         return new HashMap<String, String>(){{
             put("client_ip", ip);
             put("location", region);
-            put("greeting", String.format("Hello, %s!, the temperature is %d degrees Celsius in %s.", visitorName, weather, region));
+            put("greeting", String.format("Hello, %s!, the temperature is %d degrees Celcius in %s", visitorName, weather, region));
         }};
     }
 }
